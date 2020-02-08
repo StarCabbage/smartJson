@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>JSON Localization</title>
+</head>
+<body>
+<label>
+<textarea id="notD" style="width: 100%; height: 50vh;"
+></textarea>
+</label>
+<button onclick="convert()">turn it</button>
+<script>
+    function convert() {
+        var data = document.getElementById("notD").value;
+        if (isOnLine(data)) document.getElementById("notD").value = parseTo(data);
+        else {
+            window.newObg = {};
+            parseFrom(JSON.parse(data));
+            document.getElementById("notD").value = JSON.stringify(window.newObg, null, 4);
+        }
+    }
+
+    function isOnLine(data) {
+        var str = JSON.parse(data);
+        var boolOneLine = true;
+        const entries = Object.entries(str);
+        for (const [key, object] of entries) {
+            if (typeof object === 'object') {
+                boolOneLine = false;
+                break;
+            }
+        }
+        return boolOneLine;
+    }
+
+    function parseTo(data) {
+        var newObg = {};
+        const entries = Object.entries(JSON.parse(data));
+        for (const [key, object] of entries) {
+            var patch = key.split(".");
+            var currentObj = newObg;
+            while (patch.length > 1) {
+                if (!currentObj[patch[0]])
+                    currentObj[patch[0]] = {};
+                currentObj = currentObj[patch[0]];
+                patch.shift();
+            }
+            currentObj[patch[0]] = object;
+        }
+        return JSON.stringify(newObg, null, 4);
+    }
+
+    function parseFrom(data, path) {
+        function pF(data, path) {
+            const entries = Object.entries((data));
+            for (const [key, object] of entries) {
+                if (typeof object === 'object') {
+
+                    pF(object, path + "." + key)
+                } else window.newObg[path + "." + key] = object;
+            }
+        }
+
+        const entries = Object.entries((data));
+        for (const [key, object] of entries) {
+            if (typeof object === 'object') {
+
+                pF(object, key)
+            } else window.newObg[key] = object;
+        }
+    }
+</script>
+</body>
+</html>
