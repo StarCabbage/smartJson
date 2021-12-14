@@ -38,7 +38,7 @@
         var newObg = {};
         const entries = Object.entries(JSON.parse(data));
         for (const [key, object] of entries) {
-            var patch = key.split(".");
+            var patch = key.split("__");
             var currentObj = newObg;
             while (patch.length > 1) {
                 if (!currentObj[patch[0]])
@@ -57,8 +57,8 @@
             for (const [key, object] of entries) {
                 if (typeof object === 'object') {
 
-                    pF(object, path + "." + key)
-                } else window.newObg[path + "_" + key] = object;
+                    pF(object, path + "__" + key)
+                } else window.newObg[path + "__" + key] = object;
             }
         }
 
