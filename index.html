@@ -58,7 +58,7 @@
                 if (typeof object === 'object') {
 
                     pF(object, path + "." + key)
-                } else window.newObg[path + "." + key] = object;
+                } else window.newObg[path + "_" + key] = object;
             }
         }
 
